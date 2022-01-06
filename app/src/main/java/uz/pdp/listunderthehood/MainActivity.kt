@@ -1,21 +1,26 @@
 package uz.pdp.listunderthehood
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var linearLayout: LinearLayout
     private lateinit var loadButton: Button
     private lateinit var laptops: ArrayList<Laptop>
+    private val TAG = "MainLifeCycle"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.d(TAG, "onCreate: ")
 
         laptops = ArrayList()
 
@@ -27,8 +32,19 @@ class MainActivity : AppCompatActivity() {
 
         initViews()
 
+        if (savedInstanceState != null) {
+            val savedLaptops = savedInstanceState.getParcelableArrayList<Laptop>("laptops")
+            savedLaptops!!.forEach {
+                linearLayout.addView(addItem(it))
+            }
+        }
+
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelableArrayList("laptops", laptops)
+        super.onSaveInstanceState(outState)
+    }
     private fun initViews() {
 
         linearLayout = findViewById(R.id.container_root)
@@ -81,6 +97,31 @@ class MainActivity : AppCompatActivity() {
 
         return tempLinearLayout
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d(TAG, "onStart: ")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(TAG, "onPause: ")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(TAG, "onDestroy: ")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d(TAG, "onRestart: ")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d(TAG, "onStop: ")
     }
 
 }
